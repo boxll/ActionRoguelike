@@ -2,8 +2,11 @@
 
 
 #include "RogueCharacter.h"
-#include "GameFramework\SpringArmComponent.h"
-#include "Camera\CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Components/InputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Controller.h"
 
 // Sets default values
 ARogueCharacter::ARogueCharacter()
@@ -12,10 +15,15 @@ ARogueCharacter::ARogueCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>("SpringArmComp");
+	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SetupAttachment(RootComponent);
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	bUseControllerRotationYaw = false;
 }
 
 // Called when the game starts or when spawned
@@ -44,10 +52,17 @@ void ARogueCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ARogueCharacter::MoveForward(float input)
 {
-	AddMovementInput(GetActorForwardVector(), input);
+	const FRotator ControlRot = GetControlRotation();
+	const FRotator ForwardRot = FRotator(0, ControlRot.Yaw, 0);
+
+	AddMovementInput(ForwardRot.Vector(), input);
 }
 
 void ARogueCharacter::MoveRight(float input)
 {
-	AddMovementInput(GetActorRightVector(), input);
+	const FRotator ControlRot = GetControlRotation();
+	// Rotate forward to right, borrow from UKismetMathLibrary::GetRightVector
+	const FVector RightVec = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
+	
+	AddMovementInput(RightVec, input);
 }
