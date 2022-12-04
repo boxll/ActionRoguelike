@@ -2,11 +2,11 @@
 
 
 #include "RogueCharacter.h"
+#include "RogueProjectile.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/Controller.h"
 
 // Sets default values
 ARogueCharacter::ARogueCharacter()
@@ -48,21 +48,36 @@ void ARogueCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAxis("MoveRight", this, &ARogueCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookRight", this, &APawn::AddControllerYawInput);
+
+	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ARogueCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ARogueCharacter::Jump);
 }
 
-void ARogueCharacter::MoveForward(float input)
+void ARogueCharacter::MoveForward(float Input)
 {
 	const FRotator ControlRot = GetControlRotation();
 	const FRotator ForwardRot = FRotator(0, ControlRot.Yaw, 0);
 
-	AddMovementInput(ForwardRot.Vector(), input);
+	AddMovementInput(ForwardRot.Vector(), Input);
 }
 
-void ARogueCharacter::MoveRight(float input)
+void ARogueCharacter::MoveRight(float Input)
 {
 	const FRotator ControlRot = GetControlRotation();
 	// Rotate forward to right, borrow from UKismetMathLibrary::GetRightVector
 	const FVector RightVec = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
 	
-	AddMovementInput(RightVec, input);
+	AddMovementInput(RightVec, Input);
+}
+
+void ARogueCharacter::PrimaryAttack()
+{
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	GetWorld()->SpawnActor<AActor>(PrimaryProjectileClass, SpawnTM, SpawnParams);
 }

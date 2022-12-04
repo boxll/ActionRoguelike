@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RogueProjectile.h"
 #include "GameFramework/Character.h"
 #include "RogueCharacter.generated.h"
 
@@ -26,16 +27,22 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ARogueProjectile> PrimaryProjectileClass;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void MoveForward(float input);
-	void MoveRight(float input);
+	void MoveForward(float Input);
+	void MoveRight(float Input);
+
+	void PrimaryAttack();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
