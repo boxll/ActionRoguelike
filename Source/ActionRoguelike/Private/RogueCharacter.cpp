@@ -21,6 +21,8 @@ ARogueCharacter::ARogueCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>("CameraComp");
 	CameraComp->SetupAttachment(SpringArmComp);
 
+	InteractComp = CreateDefaultSubobject<UInteractComponent>("InteractComp");
+
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	bUseControllerRotationYaw = false;
@@ -51,6 +53,7 @@ void ARogueCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ARogueCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ARogueCharacter::Jump);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ARogueCharacter::Interact);
 }
 
 void ARogueCharacter::MoveForward(float Input)
@@ -80,4 +83,9 @@ void ARogueCharacter::PrimaryAttack()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
 	GetWorld()->SpawnActor<AActor>(PrimaryProjectileClass, SpawnTM, SpawnParams);
+}
+
+void ARogueCharacter::Interact()
+{
+	InteractComp->Interact();
 }

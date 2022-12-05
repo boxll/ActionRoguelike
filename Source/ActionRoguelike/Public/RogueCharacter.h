@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InteractComponent.h"
 #include "RogueProjectile.h"
 #include "GameFramework/Character.h"
 #include "RogueCharacter.generated.h"
@@ -27,6 +28,9 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
+	UPROPERTY(VisibleAnywhere)
+	UInteractComponent* InteractComp;
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ARogueProjectile> PrimaryProjectileClass;
 
@@ -37,6 +41,8 @@ protected:
 	void MoveRight(float Input);
 
 	void PrimaryAttack();
+
+	void Interact();
 
 public:	
 	// Called every frame
