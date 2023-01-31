@@ -51,11 +51,9 @@ void UInteractComponent::Interact()
 
 	for (FHitResult Hit : OutHits)
 	{
-		AActor* HitActor = Hit.GetActor();
-		if (HitActor)
+		if (AActor* HitActor = Hit.GetActor())
 		{
-			IInteractInterface* Interface = Cast<IInteractInterface>(HitActor);
-			if (Interface)
+			if (IInteractInterface* Interface = Cast<IInteractInterface>(HitActor))
 			{
 				Interface->Execute_Interact(HitActor, Cast<ARogueCharacter>(GetOwner()));
 				break;

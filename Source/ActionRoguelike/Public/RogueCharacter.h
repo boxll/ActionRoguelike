@@ -10,7 +10,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
-
+class UAnimMontage;
 
 UCLASS()
 class ACTIONROGUELIKE_API ARogueCharacter : public ACharacter
@@ -31,8 +31,11 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UInteractComponent* InteractComp;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="PrimaryAttack")
 	TSubclassOf<ARogueProjectile> PrimaryProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category="PrimaryAttack")
+	UAnimMontage* PrimaryAttackAnim;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -43,6 +46,7 @@ protected:
 	void PrimaryAttack();
 
 	void Interact();
+	void SpawnPrimaryBullet();
 
 public:	
 	// Called every frame

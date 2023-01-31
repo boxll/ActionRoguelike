@@ -75,17 +75,24 @@ void ARogueCharacter::MoveRight(float Input)
 
 void ARogueCharacter::PrimaryAttack()
 {
-	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	PlayAnimMontage(PrimaryAttackAnim);
 
-	FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
-
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	
-	GetWorld()->SpawnActor<AActor>(PrimaryProjectileClass, SpawnTM, SpawnParams);
+	FTimerHandle TempHandle;
+	GetWorldTimerManager().SetTimer(TempHandle, this, &ARogueCharacter::SpawnPrimaryBullet, 0.28f, false);
 }
 
 void ARogueCharacter::Interact()
 {
 	InteractComp->Interact();
+}
+
+void ARogueCharacter::SpawnPrimaryBullet()
+{
+	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	const FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	GetWorld()->SpawnActor<AActor>(PrimaryProjectileClass, SpawnTM, SpawnParams);	
 }
