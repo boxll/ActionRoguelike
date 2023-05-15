@@ -21,7 +21,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* Mesh;
+	UStaticMeshComponent* ChestMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* LidMesh;
 
 public:	
 	// Called every frame

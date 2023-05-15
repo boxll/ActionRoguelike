@@ -5,6 +5,7 @@
 
 #include "EngineUtils.h"
 #include "InteractInterface.h"
+#include "Util/ColorConstants.h"
 
 // Sets default values for this component's properties
 UInteractComponent::UInteractComponent()
@@ -40,22 +41,31 @@ void UInteractComponent::Interact()
 {
 	FVector EyeLocation;
 	FRotator EyeRotation;
-	GetOwner() -> GetActorEyesViewPoint(EyeLocation, EyeRotation);
+	if(ARogueCharacter* OwnerRogueCharacter = Cast<ARogueCharacter>(GetOwner()))
+	{
+		OwnerRogueCharacter->GetCameraViewPoint(EyeLocation, EyeRotation);
+	}
+	else
+	{
+		GetOwner() -> GetActorEyesViewPoint(EyeLocation, EyeRotation);
+	}
 	
 	TArray<FHitResult> OutHits;
 	bool bHit = GetWorld()->SweepMultiByObjectType( OutHits, EyeLocation
-		, EyeLocation + (EyeRotation.Vector() * 1000)
+		, EyeLocation + (EyeRotation.Vector() * 120)
 		, FQuat::Identity
 		, FCollisionObjectQueryParams( ECollisionChannel::ECC_WorldDynamic )
-		, FCollisionShape::MakeSphere(30.0f) );
+		, FCollisionShape::MakeSphere(50.0f) );
+
+	// DrawDebugLine(GetWorld(), EyeLocation, EyeLocation + (EyeRotation.Vector() * 100), FColor::Red, false, 5.0f, 0.0f, 2.0f);
 
 	for (FHitResult Hit : OutHits)
 	{
 		if (AActor* HitActor = Hit.GetActor())
 		{
-			if (IInteractInterface* Interface = Cast<IInteractInterface>(HitActor))
+			if (IInteractInterface* Interface = Cast<IInteractInterface>(HitActor)) // if(HitActor->Implements<UInteractInterface>())
 			{
-				Interface->Execute_Interact(HitActor, Cast<ARogueCharacter>(GetOwner()));
+				Interface->Execute_Interact(HitActor, Cast<ARogueCharacter>(GetOwner()));  // IInteractInterface::Execute_Interact(HitActor, Cast<ARogueCharacter>(GetOwner()));
 				break;
 			}
 		}

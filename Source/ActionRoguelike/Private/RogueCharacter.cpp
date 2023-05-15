@@ -96,3 +96,9 @@ void ARogueCharacter::SpawnPrimaryBullet()
 	
 	GetWorld()->SpawnActor<AActor>(PrimaryProjectileClass, SpawnTM, SpawnParams);	
 }
+
+void ARogueCharacter::GetCameraViewPoint(FVector& OutLocation, FRotator& OutRotation)
+{
+	OutRotation = this->SpringArmComp->GetTargetRotation();
+	OutLocation = this->CameraComp->GetComponentLocation() + OutRotation.Vector() * SpringArmComp->TargetArmLength;
+}

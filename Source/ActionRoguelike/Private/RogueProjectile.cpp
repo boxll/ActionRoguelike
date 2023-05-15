@@ -3,9 +3,6 @@
 
 #include "RogueProjectile.h"
 
-#include "Components/SphereComponent.h"
-#include "Particles/ParticleSystemComponent.h"
-
 // Sets default values
 ARogueProjectile::ARogueProjectile()
 {
@@ -13,7 +10,7 @@ ARogueProjectile::ARogueProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
-	SphereComp->SetCollisionProfileName("Projectile");
+	// SphereComp->SetCollisionProfileName("Projectile");
 	RootComponent = SphereComp;
 
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
@@ -29,13 +26,11 @@ ARogueProjectile::ARogueProjectile()
 void ARogueProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ARogueProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

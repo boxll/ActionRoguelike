@@ -3,6 +3,8 @@
 
 #include "RogueExplosive.h"
 
+#include "PhysicsEngine/RadialForceComponent.h"
+
 // Sets default values
 ARogueExplosive::ARogueExplosive()
 {
@@ -12,12 +14,31 @@ ARogueExplosive::ARogueExplosive()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	RootComponent = Mesh;
 
+	RadialForce = CreateDefaultSubobject<URadialForceComponent>("RadialForce");
+	RadialForce->SetupAttachment(RootComponent);
+	RadialForce->Radius = 500;
+	RadialForce->ImpulseStrength = 200;
+	RadialForce->bImpulseVelChange = 1;
+	RadialForce->bIgnoreOwningActor = 1;
+
+	Exploded = false;
 }
 
 // Called when the game starts or when spawned
 void ARogueExplosive::BeginPlay()
 {
 	Super::BeginPlay();
+	Mesh->OnComponentHit.AddDynamic(this, &ARogueExplosive::TryExplode);
+}
+
+void ARogueExplosive::TryExplode(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	if(!Exploded)
+	{
+		RadialForce->FireImpulse();
+		Exploded = true;
+	}
 	
 }
 
