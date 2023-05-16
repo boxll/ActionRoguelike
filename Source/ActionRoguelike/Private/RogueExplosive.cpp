@@ -16,19 +16,27 @@ ARogueExplosive::ARogueExplosive()
 
 	RadialForce = CreateDefaultSubobject<URadialForceComponent>("RadialForce");
 	RadialForce->SetupAttachment(RootComponent);
-	RadialForce->Radius = 500;
-	RadialForce->ImpulseStrength = 200;
-	RadialForce->bImpulseVelChange = 1;
-	RadialForce->bIgnoreOwningActor = 1;
+	RadialForce->Radius = 500.0f;
+	RadialForce->ImpulseStrength = 200.0f;
+	RadialForce->bImpulseVelChange = true;
+	RadialForce->bIgnoreOwningActor = true;
+	RadialForce->AddObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
+	RadialForce->RemoveObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+	RadialForce->AddCollisionChannelToAffect()
 
 	Exploded = false;
+}
+
+void ARogueExplosive::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	Mesh->OnComponentHit.AddDynamic(this, &ARogueExplosive::TryExplode);
 }
 
 // Called when the game starts or when spawned
 void ARogueExplosive::BeginPlay()
 {
 	Super::BeginPlay();
-	Mesh->OnComponentHit.AddDynamic(this, &ARogueExplosive::TryExplode);
 }
 
 void ARogueExplosive::TryExplode(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
