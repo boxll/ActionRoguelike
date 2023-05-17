@@ -22,7 +22,6 @@ ARogueExplosive::ARogueExplosive()
 	RadialForce->bIgnoreOwningActor = true;
 	RadialForce->AddObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
 	RadialForce->RemoveObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
-	RadialForce->AddCollisionChannelToAffect()
 
 	Exploded = false;
 }
