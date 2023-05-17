@@ -20,8 +20,8 @@ ARogueExplosive::ARogueExplosive()
 	RadialForce->ImpulseStrength = 200.0f;
 	RadialForce->bImpulseVelChange = true;
 	RadialForce->bIgnoreOwningActor = true;
-	RadialForce->AddObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
-	RadialForce->RemoveObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+	RadialForce->AddObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECC_WorldDynamic));
+	RadialForce->RemoveObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECC_Pawn));
 
 	Exploded = false;
 }
