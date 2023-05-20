@@ -90,7 +90,12 @@ void ARogueCharacter::Interact()
 void ARogueCharacter::SpawnPrimaryBullet()
 {
 	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-	const FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
+
+	FVector ViewBeginLocation;
+	FVector ViewEndLocation;
+	GetCameraViewVector(ViewBeginLocation, ViewEndLocation, 500.0f);
+	
+	const FTransform SpawnTM = FTransform((ViewEndLocation - HandLocation).ToOrientationRotator(), HandLocation);
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -98,8 +103,20 @@ void ARogueCharacter::SpawnPrimaryBullet()
 	GetWorld()->SpawnActor<AActor>(PrimaryProjectileClass, SpawnTM, SpawnParams);	
 }
 
-void ARogueCharacter::GetCameraViewPoint(FVector& OutLocation, FRotator& OutRotation)
+void ARogueCharacter::GetCameraViewVector(FVector& BeginLocation, FVector& EndLocation, float VectorLength = 100.0f)
 {
-	OutRotation = this->SpringArmComp->GetTargetRotation();
-	OutLocation = this->CameraComp->GetComponentLocation() + OutRotation.Vector() * SpringArmComp->TargetArmLength;
+	FRotator ViewRotation = GetControlRotation();
+	BeginLocation = this->CameraComp->GetComponentLocation() + ViewRotation.Vector() * SpringArmComp->TargetArmLength;
+	
+	EndLocation = BeginLocation + (ViewRotation.Vector() * VectorLength);
+
+	TArray<FHitResult> OutHits;
+	bool bHit = GetWorld()->LineTraceMultiByChannel(OutHits, BeginLocation,
+		EndLocation, ECC_Visibility );
+
+	if(bHit)
+	{
+		EndLocation = OutHits[0].Location;
+	}
+
 }

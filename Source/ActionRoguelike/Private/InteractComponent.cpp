@@ -39,20 +39,22 @@ void UInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UInteractComponent::Interact()
 {
-	FVector EyeLocation;
-	FRotator EyeRotation;
+	FVector ViewBeginLocation;
+	FVector ViewEndLocation;
 	if(ARogueCharacter* OwnerRogueCharacter = Cast<ARogueCharacter>(GetOwner()))
 	{
-		OwnerRogueCharacter->GetCameraViewPoint(EyeLocation, EyeRotation);
+		OwnerRogueCharacter->GetCameraViewVector(ViewBeginLocation, ViewEndLocation, 120.0f);
 	}
 	else
 	{
-		GetOwner() -> GetActorEyesViewPoint(EyeLocation, EyeRotation);
+		UE_LOG(LogTemp, Error, TEXT("%s owned by wrong character class"), *this->GetClass()->GetName());
+		check(false);
+		return;
 	}
 	
 	TArray<FHitResult> OutHits;
-	bool bHit = GetWorld()->SweepMultiByObjectType( OutHits, EyeLocation
-		, EyeLocation + (EyeRotation.Vector() * 120)
+	bool bHit = GetWorld()->SweepMultiByObjectType( OutHits, ViewBeginLocation
+		, ViewEndLocation
 		, FQuat::Identity
 		, FCollisionObjectQueryParams( ECollisionChannel::ECC_WorldDynamic )
 		, FCollisionShape::MakeSphere(50.0f) );

@@ -25,7 +25,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UCameraComponent* CameraComp;
 
 	UPROPERTY(VisibleAnywhere)
@@ -56,6 +56,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void GetCameraViewPoint( FVector& OutLocation, FRotator& OutRotation );
+	void GetCameraViewVector(FVector& BeginLocation, FVector& EndLocation, float VectorLength);
 
 };
