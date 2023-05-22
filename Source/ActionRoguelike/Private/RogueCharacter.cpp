@@ -93,7 +93,7 @@ void ARogueCharacter::SpawnPrimaryBullet()
 
 	FVector ViewBeginLocation;
 	FVector ViewEndLocation;
-	GetCameraViewVector(ViewBeginLocation, ViewEndLocation, 500.0f);
+	GetCameraViewVector(ViewBeginLocation, ViewEndLocation, 10000.0f);
 	
 	const FTransform SpawnTM = FTransform((ViewEndLocation - HandLocation).ToOrientationRotator(), HandLocation);
 
