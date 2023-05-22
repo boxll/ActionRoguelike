@@ -21,6 +21,15 @@ public:
 	// Sets default values for this character's properties
 	ARogueCharacter();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void GetCameraViewVector(FVector& BeginLocation, FVector& EndLocation, float VectorLength);
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
@@ -35,6 +44,12 @@ protected:
 	TSubclassOf<ARogueProjectile> PrimaryProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category="PrimaryAttack")
+	TSubclassOf<ARogueProjectile> Ability1ProjectileClass;
+	UPROPERTY(EditAnywhere, Category="PrimaryAttack")
+
+	TSubclassOf<ARogueProjectile> UltimateProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category="PrimaryAttack")
 	UAnimMontage* PrimaryAttackAnim;
 
 	// Called when the game starts or when spawned
@@ -44,18 +59,10 @@ protected:
 	void MoveRight(float Input);
 
 	void PrimaryAttack();
+	void UseAbility1();
+	void UseUltimate();
 
 	void Interact();
-	void SpawnPrimaryBullet();
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void GetCameraViewVector(FVector& BeginLocation, FVector& EndLocation, float VectorLength);
+	void ShootBullet(TSubclassOf<ARogueProjectile> ProjectileClass);
 
 };

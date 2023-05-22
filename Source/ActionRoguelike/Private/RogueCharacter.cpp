@@ -55,6 +55,10 @@ void ARogueCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ARogueCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ARogueCharacter::Jump);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ARogueCharacter::Interact);
+
+	PlayerInputComponent->BindAction("Ability1", IE_Pressed, this, &ARogueCharacter::UseAbility1);
+	PlayerInputComponent->BindAction("Ultimate", IE_Pressed, this, &ARogueCharacter::UseUltimate);
+	
 }
 
 void ARogueCharacter::MoveForward(float Input)
@@ -79,7 +83,26 @@ void ARogueCharacter::PrimaryAttack()
 	PlayAnimMontage(PrimaryAttackAnim);
 
 	FTimerHandle TempHandle;
-	GetWorldTimerManager().SetTimer(TempHandle, this, &ARogueCharacter::SpawnPrimaryBullet, 0.28f, false);
+	FTimerDelegate TempDelegate = FTimerDelegate::CreateUObject(this, &ARogueCharacter::ShootBullet, PrimaryProjectileClass);
+	GetWorldTimerManager().SetTimer(TempHandle, TempDelegate, 0.28f, false);
+}
+
+void ARogueCharacter::UseAbility1()
+{
+	PlayAnimMontage(PrimaryAttackAnim);
+
+	FTimerHandle TempHandle;
+	FTimerDelegate TempDelegate = FTimerDelegate::CreateUObject(this, &ARogueCharacter::ShootBullet, Ability1ProjectileClass);
+	GetWorldTimerManager().SetTimer(TempHandle, TempDelegate, 0.28f, false);
+}
+
+void ARogueCharacter::UseUltimate()
+{
+	PlayAnimMontage(PrimaryAttackAnim);
+
+	FTimerHandle TempHandle;
+	FTimerDelegate TempDelegate = FTimerDelegate::CreateUObject(this, &ARogueCharacter::ShootBullet, UltimateProjectileClass);
+	GetWorldTimerManager().SetTimer(TempHandle, TempDelegate, 0.28f, false);
 }
 
 void ARogueCharacter::Interact()
@@ -87,7 +110,7 @@ void ARogueCharacter::Interact()
 	InteractComp->Interact();
 }
 
-void ARogueCharacter::SpawnPrimaryBullet()
+void ARogueCharacter::ShootBullet(TSubclassOf<ARogueProjectile> ProjectileClass)
 {
 	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
@@ -100,7 +123,7 @@ void ARogueCharacter::SpawnPrimaryBullet()
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
-	GetWorld()->SpawnActor<AActor>(PrimaryProjectileClass, SpawnTM, SpawnParams);	
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);	
 }
 
 void ARogueCharacter::GetCameraViewVector(FVector& BeginLocation, FVector& EndLocation, float VectorLength = 100.0f)
