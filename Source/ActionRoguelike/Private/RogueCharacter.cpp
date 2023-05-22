@@ -52,12 +52,12 @@ void ARogueCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookRight", this, &APawn::AddControllerYawInput);
 
-	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ARogueCharacter::PrimaryAttack);
+	PlayerInputComponent->BindAction<FProjectileAbilityDelegate>("PrimaryAttack", IE_Pressed, this, &ARogueCharacter::ProjectileAbility, PrimaryProjectileClass);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ARogueCharacter::Jump);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ARogueCharacter::Interact);
 
-	PlayerInputComponent->BindAction("Ability1", IE_Pressed, this, &ARogueCharacter::UseAbility1);
-	PlayerInputComponent->BindAction("Ultimate", IE_Pressed, this, &ARogueCharacter::UseUltimate);
+	PlayerInputComponent->BindAction<FProjectileAbilityDelegate>("Ability1", IE_Pressed, this, &ARogueCharacter::ProjectileAbility, Ability1ProjectileClass);
+	PlayerInputComponent->BindAction<FProjectileAbilityDelegate>("Ultimate", IE_Pressed, this, &ARogueCharacter::ProjectileAbility, UltimateProjectileClass);
 	
 }
 
@@ -78,30 +78,12 @@ void ARogueCharacter::MoveRight(float Input)
 	AddMovementInput(RightVec, Input);
 }
 
-void ARogueCharacter::PrimaryAttack()
+void ARogueCharacter::ProjectileAbility(TSubclassOf<ARogueProjectile> ProjectileClass)
 {
 	PlayAnimMontage(PrimaryAttackAnim);
 
 	FTimerHandle TempHandle;
-	FTimerDelegate TempDelegate = FTimerDelegate::CreateUObject(this, &ARogueCharacter::ShootBullet, PrimaryProjectileClass);
-	GetWorldTimerManager().SetTimer(TempHandle, TempDelegate, 0.28f, false);
-}
-
-void ARogueCharacter::UseAbility1()
-{
-	PlayAnimMontage(PrimaryAttackAnim);
-
-	FTimerHandle TempHandle;
-	FTimerDelegate TempDelegate = FTimerDelegate::CreateUObject(this, &ARogueCharacter::ShootBullet, Ability1ProjectileClass);
-	GetWorldTimerManager().SetTimer(TempHandle, TempDelegate, 0.28f, false);
-}
-
-void ARogueCharacter::UseUltimate()
-{
-	PlayAnimMontage(PrimaryAttackAnim);
-
-	FTimerHandle TempHandle;
-	FTimerDelegate TempDelegate = FTimerDelegate::CreateUObject(this, &ARogueCharacter::ShootBullet, UltimateProjectileClass);
+	FTimerDelegate TempDelegate = FTimerDelegate::CreateUObject(this, &ARogueCharacter::SpawnProjectile, ProjectileClass);
 	GetWorldTimerManager().SetTimer(TempHandle, TempDelegate, 0.28f, false);
 }
 
@@ -110,7 +92,7 @@ void ARogueCharacter::Interact()
 	InteractComp->Interact();
 }
 
-void ARogueCharacter::ShootBullet(TSubclassOf<ARogueProjectile> ProjectileClass)
+void ARogueCharacter::SpawnProjectile(TSubclassOf<ARogueProjectile> ProjectileClass)
 {
 	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 

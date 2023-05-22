@@ -58,11 +58,11 @@ protected:
 	void MoveForward(float Input);
 	void MoveRight(float Input);
 
-	void PrimaryAttack();
-	void UseAbility1();
-	void UseUltimate();
+	UFUNCTION()
+	void ProjectileAbility(TSubclassOf<ARogueProjectile> ProjectileClass);
+	DECLARE_DELEGATE_OneParam(FProjectileAbilityDelegate, TSubclassOf<ARogueProjectile>);
 
 	void Interact();
-	void ShootBullet(TSubclassOf<ARogueProjectile> ProjectileClass);
+	void SpawnProjectile(TSubclassOf<ARogueProjectile> ProjectileClass);
 
 };
