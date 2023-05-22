@@ -40,7 +40,8 @@ void ARogueCharacter::BeginPlay()
 void ARogueCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	UCharacterMovementComponent* MovementComp = GetCharacterMovement();
+	MovementComp->bUseControllerDesiredRotation = MovementComp->GetCurrentAcceleration().Length() > 0;
 }
 
 // Called to bind functionality to input
@@ -80,6 +81,8 @@ void ARogueCharacter::MoveRight(float Input)
 
 void ARogueCharacter::ProjectileAbility(TSubclassOf<ARogueProjectile> ProjectileClass)
 {
+	SetActorRotation(FRotator(0.0f, GetControlRotation().Yaw, 0.0f));
+	
 	PlayAnimMontage(PrimaryAttackAnim);
 
 	FTimerHandle TempHandle;
