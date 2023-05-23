@@ -18,6 +18,9 @@ public:
 	// Sets default values for this actor's properties
 	ARogueProjectile();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,9 +33,4 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent* EffectComp;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	
 };
