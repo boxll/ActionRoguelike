@@ -24,8 +24,6 @@ ARogueCharacter::ARogueCharacter()
 
 	InteractComp = CreateDefaultSubobject<UInteractComponent>("InteractComp");
 
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-
 	bUseControllerRotationYaw = false;
 }
 
