@@ -18,9 +18,21 @@ bool URogueHealthComponent::ApplyHealthChange(float Delta)
 {
 	if(isnan(Delta)){return false;}
 
+	float OldHealth = Health;
 	Health= std::clamp(Health + Delta, 0.0f, MaxHealth);
-
+	OnHealthChangedDelegate.Broadcast(this, OldHealth, Health, nullptr);
+	
 	return true;
+}
+
+float URogueHealthComponent::GetHealth()
+{
+	return Health;
+}
+
+float URogueHealthComponent::GetMaxHealth()
+{
+	return MaxHealth;
 }
 
 
@@ -29,8 +41,8 @@ void URogueHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	Health = MaxHealth;
-	// ...
-	
+	OnHealthChangedDelegate.Broadcast(this, Health, Health, nullptr);
+
 }
 
 

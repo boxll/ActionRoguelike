@@ -16,6 +16,7 @@ void ARogueHUD::BeginPlay()
 	Super::BeginPlay();
 
 	CrossHair = CreateAndShowUserWidget(CrossHairClass);
+	HealthBar = CreateAndShowUserWidget(HealthBarClass);
 }
 
 UUserWidget* ARogueHUD::CreateAndShowUserWidget(TSubclassOf<UUserWidget> UserWidgetClass)

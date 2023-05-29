@@ -27,7 +27,12 @@ private:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		TSubclassOf<UUserWidget> CrossHairClass;
+	TSubclassOf<UUserWidget> CrossHairClass;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		UUserWidget* CrossHair;
+	UUserWidget* CrossHair;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> HealthBarClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UUserWidget* HealthBar;
 };

@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "RogueHealthComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChangedSignature, URogueHealthComponent*, HealthComp, float, OldValue, float, NewValue, AActor*, Instigator);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API URogueHealthComponent : public UActorComponent
@@ -16,7 +17,15 @@ public:
 	// Sets default values for this component's properties
 	URogueHealthComponent();
 
+	UFUNCTION(BlueprintCallable)
 	bool ApplyHealthChange(float Delta);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChangedSignature OnHealthChangedDelegate;
+
+	float GetHealth();
+	float GetMaxHealth();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
