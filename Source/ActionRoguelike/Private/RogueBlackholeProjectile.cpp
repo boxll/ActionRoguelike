@@ -11,6 +11,8 @@ ARogueBlackholeProjectile::ARogueBlackholeProjectile()
 	RadialForce->Radius = 500.0f;
 	RadialForce->ForceStrength = -10000.0f; // Negative number to suck in stuffs
 	RadialForce->RemoveObjectTypeToAffect(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+
+	Damage = 0;
 }
 
 void ARogueBlackholeProjectile::PostInitializeComponents()

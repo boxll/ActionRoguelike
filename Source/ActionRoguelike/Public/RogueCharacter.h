@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InteractComponent.h"
+#include "RogueHealthComponent.h"
 #include "RogueProjectile.h"
 #include "GameFramework/Character.h"
 #include "RogueCharacter.generated.h"
@@ -39,6 +40,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UInteractComponent* InteractComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	URogueHealthComponent* HealthComp;
 
 	UPROPERTY(EditAnywhere, Category="PrimaryAttack")
 	TSubclassOf<ARogueProjectile> PrimaryProjectileClass;

@@ -3,6 +3,8 @@
 
 #include "RogueProjectile.h"
 
+#include "RogueHealthComponent.h"
+
 // Sets default values
 ARogueProjectile::ARogueProjectile()
 {
@@ -22,6 +24,14 @@ ARogueProjectile::ARogueProjectile()
 	
 }
 
+void ARogueProjectile::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	SphereComp->OnComponentHit.AddDynamic(this, &ARogueProjectile::OnSphereCompHit);
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ARogueProjectile::OnSphereCompBeginOverlap);
+}
+
 // Called when the game starts or when spawned
 void ARogueProjectile::BeginPlay()
 {
@@ -34,3 +44,27 @@ void ARogueProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void ARogueProjectile::OnSphereCompHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	DoProjectileDamageToActor(OtherActor);
+}
+
+void ARogueProjectile::OnSphereCompBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	DoProjectileDamageToActor(OtherActor);
+}
+
+void ARogueProjectile::DoProjectileDamageToActor(AActor* Actor)
+{
+	if(Actor)
+	{
+		URogueHealthComponent* HealthComp = Cast<URogueHealthComponent>(Actor->GetComponentByClass(URogueHealthComponent::StaticClass()));
+		if(HealthComp)
+		{
+			HealthComp->ApplyHealthChange(Damage);
+			Destroy();
+		}
+	}
+}

@@ -24,6 +24,8 @@ ARogueCharacter::ARogueCharacter()
 
 	InteractComp = CreateDefaultSubobject<UInteractComponent>("InteractComp");
 
+	HealthComp = CreateDefaultSubobject<URogueHealthComponent>("HealthComp");
+
 	bUseControllerRotationYaw = false;
 }
 
@@ -95,20 +97,23 @@ void ARogueCharacter::Interact()
 
 void ARogueCharacter::SpawnProjectile(TSubclassOf<ARogueProjectile> ProjectileClass)
 {
-	const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	if(ensureAlways(ProjectileClass))
+	{
+		const FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
-	FVector ViewBeginLocation;
-	FVector ViewEndLocation;
-	GetCameraViewVector(ViewBeginLocation, ViewEndLocation, 10000.0f);
+		FVector ViewBeginLocation;
+		FVector ViewEndLocation;
+		GetCameraViewVector(ViewBeginLocation, ViewEndLocation, 10000.0f);
 	
-	const FTransform SpawnTM = FTransform((ViewEndLocation - HandLocation).ToOrientationRotator(), HandLocation);
+		const FTransform SpawnTM = FTransform((ViewEndLocation - HandLocation).ToOrientationRotator(), HandLocation);
 
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnParams.Owner = this;
-	SpawnParams.Instigator = this;
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = this;
 	
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);	
+		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);			
+	}
 }
 
 void ARogueCharacter::GetCameraViewVector(FVector& BeginLocation, FVector& EndLocation, float VectorLength = 100.0f)

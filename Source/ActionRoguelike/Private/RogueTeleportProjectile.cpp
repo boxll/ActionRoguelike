@@ -10,6 +10,8 @@ ARogueTeleportProjectile::ARogueTeleportProjectile()
 	TeleportEffectComp = CreateDefaultSubobject<UParticleSystemComponent>("TeleportEffectComp");
 	TeleportEffectComp->SetupAttachment(RootComponent);
 	TeleportEffectComp->bAutoActivate = false;
+
+	Damage = 0;
 }
 
 void ARogueTeleportProjectile::BeginPlay()
