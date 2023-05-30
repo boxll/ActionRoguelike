@@ -4,6 +4,7 @@
 #include "RogueUWHealthBar.h"
 
 #include "RogueHealthComponent.h"
+#include "Components/CanvasPanelSlot.h"
 
 void URogueUWHealthBar::NativeConstruct()
 {
@@ -25,5 +26,15 @@ void URogueUWHealthBar::UpdateHealthBar(URogueHealthComponent* HealthComp, float
 	Opts.SetMaximumFractionalDigits(0);
 	HealthNumberLabel->SetText(FText::AsNumber(NewValue, &Opts));
 
-	HealthBar->SetPercent(NewValue / HealthComp->GetMaxHealth());
+	float NewPercent = NewValue / HealthComp->GetMaxHealth();
+	float OldPercent = OldValue / HealthComp->GetMaxHealth();
+
+	UCanvasPanelSlot* DeltaHealthImageSlot = Cast<UCanvasPanelSlot>(DeltaHealthImage->Slot);
+	DeltaHealthImageSlot->SetAnchors(FAnchors(NewPercent, 0.0f, OldPercent, 1.0f));
+	
+	HealthBar->SetPercent(NewPercent);
+	if(OldValue>NewValue)
+	{
+		PlayAnimation(HealthDecreaseAnim);
+	}
 }

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "RogueHealthComponent.h"
 #include "RogueUserWidget.h"
+#include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "RogueUWHealthBar.generated.h"
@@ -27,4 +28,8 @@ protected:
 	UTextBlock* HealthNumberLabel;
 	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
 	UProgressBar* HealthBar;
+	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	UImage* DeltaHealthImage;
+	UPROPERTY(Transient, meta=(BindWidgetAnim))
+	UWidgetAnimation* HealthDecreaseAnim;
 };
