@@ -21,6 +21,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	USphereComponent* GetSphereComponent() const {return SphereComp;}
+
 protected:
 	virtual void PostInitializeComponents() override;
 	

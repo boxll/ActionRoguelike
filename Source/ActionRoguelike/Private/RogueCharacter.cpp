@@ -5,6 +5,7 @@
 #include "RogueProjectile.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -112,7 +113,10 @@ void ARogueCharacter::SpawnProjectile(TSubclassOf<ARogueProjectile> ProjectileCl
 		SpawnParams.Owner = this;
 		SpawnParams.Instigator = this;
 	
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);			
+		ARogueProjectile* Projectile = GetWorld()->SpawnActor<ARogueProjectile>(ProjectileClass, SpawnTM, SpawnParams);
+
+		Projectile->GetSphereComponent()->IgnoreActorWhenMoving(this, true);
+		this->GetCapsuleComponent()->IgnoreActorWhenMoving(Projectile, true);
 	}
 }
 
