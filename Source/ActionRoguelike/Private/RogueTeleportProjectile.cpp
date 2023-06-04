@@ -24,6 +24,7 @@ void ARogueTeleportProjectile::BeginPlay()
 
 void ARogueTeleportProjectile::Denotation()
 {
+	EffectComp->Deactivate();
 	//Play Denotation Effect
 	TeleportEffectComp->Activate();
 	MovementComp->StopMovementImmediately();
@@ -34,6 +35,10 @@ void ARogueTeleportProjectile::Denotation()
 
 void ARogueTeleportProjectile::Teleport()
 {
-	Owner->TeleportTo(GetActorLocation(), Owner->GetActorRotation());
+	if(Owner)
+	{
+		Owner->TeleportTo(GetActorLocation(), Owner->GetActorRotation());
+	}
+	
 	Destroy();
 }
