@@ -26,6 +26,7 @@ ARogueCharacter::ARogueCharacter()
 	InteractComp = CreateDefaultSubobject<UInteractComponent>("InteractComp");
 
 	HealthComp = CreateDefaultSubobject<URogueHealthComponent>("HealthComp");
+	HealthComp->OnOutOfHealthDelegate.AddDynamic(this, &ARogueCharacter::Death);
 
 	bUseControllerRotationYaw = false;
 }
@@ -136,4 +137,19 @@ void ARogueCharacter::GetCameraViewVector(FVector& BeginLocation, FVector& EndLo
 		EndLocation = OutHits[0].Location;
 	}
 
+}
+
+void ARogueCharacter::Death()
+{
+	// Disable collision
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	check(CapsuleComp);
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+	// Disable input
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	DisableInput(PC);
+
+	bIsAlive = false;
 }

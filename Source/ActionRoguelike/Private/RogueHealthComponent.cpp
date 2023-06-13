@@ -19,8 +19,12 @@ bool URogueHealthComponent::ApplyHealthChange(float Delta)
 	if(isnan(Delta)){return false;}
 
 	float OldHealth = Health;
-	Health= std::clamp(Health + Delta, 0.0f, MaxHealth);
+	Health = std::clamp(Health + Delta, 0.0f, MaxHealth);
 	OnHealthChangedDelegate.Broadcast(this, OldHealth, Health, nullptr);
+	if(Health <= 0)
+	{
+		OnOutOfHealthDelegate.Broadcast();
+	}
 	
 	return true;
 }

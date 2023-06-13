@@ -31,6 +31,9 @@ public:
 
 	void GetCameraViewVector(FVector& BeginLocation, FVector& EndLocation, float VectorLength);
 
+	UFUNCTION(BlueprintGetter)
+	bool IsAlive(){return bIsAlive;}
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
@@ -69,4 +72,9 @@ protected:
 	void Interact();
 	void SpawnProjectile(TSubclassOf<ARogueProjectile> ProjectileClass);
 
+	UPROPERTY(BlueprintGetter=IsAlive)
+	bool bIsAlive = true;
+
+	UFUNCTION()
+	void Death();
 };

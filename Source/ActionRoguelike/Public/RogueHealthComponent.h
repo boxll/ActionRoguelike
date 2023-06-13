@@ -7,6 +7,7 @@
 #include "RogueHealthComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChangedSignature, URogueHealthComponent*, HealthComp, float, OldValue, float, NewValue, AActor*, Instigator);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOutOfHealthSignature);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API URogueHealthComponent : public UActorComponent
@@ -22,6 +23,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChangedSignature OnHealthChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnOutOfHealthSignature OnOutOfHealthDelegate;
 
 	float GetHealth();
 	float GetMaxHealth();

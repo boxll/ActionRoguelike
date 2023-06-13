@@ -63,7 +63,7 @@ void ARogueProjectile::DoProjectileDamageToActor(AActor* Actor)
 		URogueHealthComponent* HealthComp = Cast<URogueHealthComponent>(Actor->GetComponentByClass(URogueHealthComponent::StaticClass()));
 		if(HealthComp)
 		{
-			HealthComp->ApplyHealthChange(Damage);
+			HealthComp->ApplyHealthChange(-Damage);
 			Destroy();
 		}
 	}
